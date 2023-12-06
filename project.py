@@ -50,18 +50,18 @@ async def on_message(message):
 
     if channel == "server-updates":
         if userMessage == "help":
-             outputCommands("Here are the available commands:\n", csm_commands)
+            await outputCommands("Here are the available commands:\n"+csm_commands)
         elif userMessage == "hello world":
-             outputMessage('hello')
+            await outputMessage('hello')
         elif userMessage == "tell me about my server":
-            outputMessage(f"""your ec2 server data:
+            await outputMessage(f"""your ec2 server data:
                           region: {md.region}
                           public ipv4 address: {md.public_ipv4}
                           availability zone:{md.availability_zone}
                           server instance: {md.instance_type}
                           """)
         else:
-             outputMessage(f"I'm sorry, the command '{userMessage}' is not a valid command.\ntry 'help' for a list of available commands.")
+             await outputMessage(f"I'm sorry, the command '{userMessage}' is not a valid command.\ntry 'help' for a list of available commands.")
 
 
 client.run(token)
