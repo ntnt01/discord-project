@@ -20,13 +20,6 @@ csm_commands = {
         'downtime log': 'this will output a log of the downtimes in the past'
             }
 
-async def outputMessage(message):
-    await message.channel.send(message) 
-    
-
-async def outputCommands(commandsDict):
-    for command in commandsDict:
-        await outputMessage(f"{command} - {commandsDict[command]}")
 
 @client.event
 async def on_ready():
@@ -34,6 +27,15 @@ async def on_ready():
         print("Logged in as a bot {0.user}".format(client))
     except Exception as e:
         print("Something went wrong. Please try again later.")
+
+
+async def outputMessage(message):
+    await message.channel.send(message) 
+    
+
+async def outputCommands(commandsDict):
+    for command in commandsDict:
+        await outputMessage(f"{command} - {commandsDict[command]}")
 
 
 @client.event
