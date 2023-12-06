@@ -7,12 +7,10 @@ from dotenv import load_dotenv
 #print(md.region)
 #print(md.instance_id)
 
-def init():
-    load_dotenv()
-    client = discord.Client()
-    token = str(os.getenv('TOKEN'))
+load_dotenv()
+client = discord.Client()
+token = str(os.getenv('TOKEN'))
 
-init()
 
 csm_commands = {
         'help': 'this will output the current list of commands available to you',
@@ -22,13 +20,13 @@ csm_commands = {
         'downtime log': 'this will output a log of the downtimes in the past'
             }
 
-def outputMessage(message):
-    message.channel.send(message) 
+async def outputMessage(message):
+    await message.channel.send(message) 
     
 
-def outputCommands(commandsDict):
+async def outputCommands(commandsDict):
     for command in commandsDict:
-        (f"{command} - {commandsDict[command]}")
+        await outputMessage(f"{command} - {commandsDict[command]}")
 
 @client.event
 async def on_ready():
@@ -47,18 +45,23 @@ async def on_message(message):
 
     if message.author == client.user:
         return
-    
+
     print(f'{username}: {userMessage} in channel: #{channel}')
 
     if channel == "server-updates":
         if userMessage == "help":
-            await outputCommands("Here are the available commands:\n", csm_commands)
+             outputCommands("Here are the available commands:\n", csm_commands)
         elif userMessage == "hello world":
-            await outputMessage('hello')
-        elif userMessage == "tell me about your server":
-            await outputMessage('hello')
+             outputMessage('hello')
+        elif userMessage == "tell me about my server":
+            outputMessage(f"""your ec2 server data:
+                          region: {md.region}
+                          public ipv4 address: {md.public_ipv4}
+                          availability zone:{md.availability_zone}
+                          server instance: {md.instance_type}
+                          """)
         else:
-            await outputMessage(f"I'm sorry, the command '{userMessage}' is not a valid command.\ntry 'help' for a list of available commands.")
+             outputMessage(f"I'm sorry, the command '{userMessage}' is not a valid command.\ntry 'help' for a list of available commands.")
 
 
 client.run(token)
