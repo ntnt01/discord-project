@@ -50,17 +50,14 @@ async def on_message(message):
     print(f'{username}: {userMessage} in channel: #{channel}')
 
     if channel == "server-updates":
-        match userMessage:
-            case "help":
-                await outputCommands("Here are the available commands:\n",csm_commands)
-            case "hello world":
-                await outputMessage('hello')
-        
-            case "tell me about your server":
-                await outputMessage('hello')
-
-            case _:
-                await outputMessage(f"I'm sorry, the command '{userMessage}' is not a valid command.\ntry 'help' for list of available commands.")
+        if userMessage == "help":
+            await outputCommands("Here are the available commands:\n", csm_commands)
+        elif userMessage == "hello world":
+            await outputMessage('hello')
+        elif userMessage == "tell me about your server":
+            await outputMessage('hello')
+        else:
+            await outputMessage(f"I'm sorry, the command '{userMessage}' is not a valid command.\ntry 'help' for a list of available commands.")
 
 
 client.run(token)
