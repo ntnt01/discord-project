@@ -7,46 +7,60 @@ from dotenv import load_dotenv
 #print(md.region)
 #print(md.instance_id)
 
-load_dotenv()
-client = discord.Client()
+def init():
+    load_dotenv()
+    client = discord.Client()
+    token = str(os.getenv('TOKEN'))
 
-#token = str(os.getenv('TOKEN'))
 
+csm_commands = {
+        'help': 'this will output the current list of commands available to you',
+        'hello world': 'bot responds with hello, you can use this as a test command',
+        'tell me about my server': 'this will output metadata about your ec2 instance, such as address,region,zone etc',
+        'downtime': 'this will output when the next expected downtime will be',
+        'downtime log': 'this will output a log of the downtimes in the past'
+            }
+
+def outputMessage(message):
+    message.channel.send(message) 
+    
+
+def outputCommands(commandsDict):
+    for command in commandsDict:
+        (f"{command} - {commandsDict[command]}")
 
 @client.event
 async def on_ready():
     try:
         print("Logged in as a bot {0.user}".format(client))
-    except expression as identifier:
-        pass
+    except Exception as e:
+        print("Something went wrong. Please try again later.")
+
 
 @client.event
 async def on_message(message):
     username = str(message.author).split("#")[0]
     channel = str(message.channel.name)
-    user_message = str(message.content)
+    userMessage = str(message.content)
 
-    print(f'{username}: {user_message} in channel: #{channel}')
-    
+
     if message.author == client.user:
         return
+    
+    print(f'{username}: {userMessage} in channel: #{channel}')
 
-    if channel == "bot-channel":
-        if user_message.lower() == 'hello world':
-            await message.channel.send('hello')
-#            await message.channel.send(f'{username} ec2 data:{md.region}')
-            return
+    if channel == "server-updates":
+        match userMessage:
+            case "help":
+                await outputCommands("Here are the available commands:\n",csm_commands)
+            case "hello world":
+                await outputMessage('hello')
+        
+            case "tell me about your server":
+                await outputMessage('hello')
 
-        if user_message.startswith("tell me about your server".lower()):
-
-            await message.channel.send(f"""your ec2 server data:\n
-                                       region:{md.region}\n
-                                       public ipv4 address:{md.public_ipv4}\n
-                                       availability zone:{md.availability_zone}\n
-                                       server instance:{md.instance_type}
-                                       """)
-        else:
-            await message.channel.send(f"I'm sorry, the command '{user_message}' is not a valid command")
+            case _:
+                await outputMessage(f"I'm sorry, the command '{userMessage}' is not a valid command.\ntry 'help' for list of available commands.")
 
 
-client.run(os.getenv('TOKEN'))
+client.run(token)
