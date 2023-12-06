@@ -12,6 +12,7 @@ def init():
     client = discord.Client()
     token = str(os.getenv('TOKEN'))
 
+init()
 
 csm_commands = {
         'help': 'this will output the current list of commands available to you',
